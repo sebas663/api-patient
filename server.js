@@ -20,7 +20,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.text());                                    
 app.use(bodyParser.json({ type: 'application/json'})); 
 //app.use(methodOverride());
-app.use(compression())
+app.use(compression());
 
 //don't show the log when it is test
 if(process.env.MONGODBCON !== 'test') {
@@ -54,6 +54,7 @@ var patientRoute = express.Router();
 patientRoute.route('/patients')
   //.get(PatientCtrl.findAll)
   .get(validate(vFilter.filter),PatientCtrl.findAllByFilter)
+  //.get(PatientCtrl.findAllByFilter)
   .post(PatientCtrl.add);
 
 patientRoute.route('/patients/:id')

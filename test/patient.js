@@ -1,40 +1,46 @@
-//During the test the env variable is set to test
-//process.env.NODE_ENV = 'test';
-
 var mongoose    =   require("mongoose");
+// set Promise provider to bluebird
+mongoose.Promise = require('bluebird');
 var Patient     =   require('../models/patient');
-
 //Require the dev-dependencies
 var chai        =   require('chai');
 var chaiHttp    =   require('chai-http');
-var server      =   require('../server');
+//var chaiAsPromised = require("chai-as-promised");
+//var server      =   require('../server');
+var server      = 'http://localhost:4200';
+// Add promise support if this does not exist natively.
+
+//chai.use(chaiAsPromised);
+chai.use(chaiHttp);
 
 var should = chai.should();
 
 //For work whit environment variable.
 require('dotenv').config();
 
-chai.use(chaiHttp);
 describe('Patients', () => {
-    beforeEach((done) => {
+    beforeEach(() => {
         Patient.remove({}, (err) => { 
            done();         
-        });     
+        });
     });
   describe('/GET patients', () => {
-      it('it should GET all the patients', (done) => {
-            chai.request(server)
+      it('it should GET all the patients', () => {
+             chai.request(server)
             .get('/api/' + process.env.API_VERSION + '/patients')
-            .end((err, res) => {
-                res.should.have.status(200);
-                res.body.should.be.a('array');
-                res.body.length.should.be.eql(0);
-              done();
+            .then(function (res) {
+                expect(res).to.have.status(200);
+                expect(res.body).to.be.a('array');
+                expect(res.body.length).to.be.eql(0);
+            })
+            .catch(function (err) {
+                console.log("Promise Rejected");
             });
       });
   });
+
   describe('/POST patient', () => {
-      it('it should not POST a patient without dni', (done) => {
+      it('it should not POST a patient without dni', () => {
         var patient = {
                 name: "nombre1 test",
                 surname: "Apellido1",
@@ -46,15 +52,17 @@ describe('Patients', () => {
             chai.request(server)
             .post('/api/' + process.env.API_VERSION + '/patients')
             .send(patient)
-            .end((err, res) => {
-                res.should.have.status(200);
-                res.body.should.be.a('object');
-                res.body.should.have.property('errors');
-                res.body.errors.should.have.property('ndocument');
-              done();
-            });
+            .then(function (res) {
+                expect(res).to.have.status(200);
+                expect(res.body).to.be.a('object');
+                expect(res.body).to.have.property('errors');
+                expect(res.body.errors).to.have.property('ndocument');
+            })
+            .catch(function (err) {
+                console.log("Promise Rejected");
+            })
       });
-      it('it should POST a patient ', (done) => {
+      it('it should POST a patient ', () => {
         var patient = {
                 name: "nombre2 test",
                 surname: "Apellido2",
@@ -67,23 +75,25 @@ describe('Patients', () => {
             chai.request(server)
             .post('/api/' + process.env.API_VERSION + '/patients')
             .send(patient)
-            .end((err, res) => {
-                res.should.have.status(200);
-                res.body.should.be.a('object');
-                res.body.should.have.property('message').eql('Patient successfully added!');
-                res.body.patient.should.have.property('name');
-                res.body.patient.should.have.property('surname');
-                res.body.patient.should.have.property('ndocument');
-                res.body.patient.should.have.property('nhc');
-                res.body.patient.should.have.property('documentTypeCode');
-                res.body.patient.should.have.property('sex');
-                res.body.patient.should.have.property('email');
-              done();
+            .then(function (res) {
+                expect(res).to.have.status(200);
+                expect(res.body).to.be.a('object');
+                expect(res.body).to.have.property('message').eql('Patient successfully added!');
+                expect(res.body.patient).to.have.property('name');
+                expect(res.body.patient).to.have.property('surname');
+                expect(res.body.patient).to.have.property('ndocument');
+                expect(res.body.patient).to.have.property('nhc');
+                expect(res.body.patient).to.have.property('documentTypeCode');
+                expect(res.body.patient).to.have.property('sex');
+                expect(res.body.patient).to.have.property('email');
+            })
+            .catch(function (err) {
+                console.log("Promise Rejected");
             });
       });
   });
   describe('/GET/:id patient', () => {
-      it('it should GET a patient by the given id', (done) => {
+      it('it should GET a patient by the given id', () => {
         var patient = new Patient({ name: "nombre3 test",
                                     surname: "Apellido3",
                                     ndocument: 29799664,
@@ -96,25 +106,27 @@ describe('Patients', () => {
             chai.request(server)
             .get('/api/' + process.env.API_VERSION + '/patients/' + patient.id)
             .send(patient)
-            .end((err, res) => {
-                res.should.have.status(200);
-                res.body.should.be.a('object');
-                res.body.patient.should.have.property('name');
-                res.body.patient.should.have.property('surname');
-                res.body.patient.should.have.property('ndocument');
-                res.body.patient.should.have.property('nhc');
-                res.body.patient.should.have.property('documentTypeCode');
-                res.body.patient.should.have.property('sex');
-                res.body.patient.should.have.property('email');
-                res.body.should.have.property('_id').eql(patient.id);
-              done();
+            .then(function (res) {
+                expect(res).to.have.status(200);
+                expect(res.body).to.be.a('object');
+                expect(res.body.patient).to.have.property('name');
+                expect(res.body.patient).to.have.property('surname');
+                expect(res.body.patient).to.have.property('ndocument');
+                expect(res.body.patient).to.have.property('nhc');
+                expect(res.body.patient).to.have.property('documentTypeCode');
+                expect(res.body.patient).to.have.property('sex');
+                expect(res.body.patient).to.have.property('email');
+                expect(res.body).to.have.property('_id').eql(patient.id);
+            })
+            .catch(function (err) {
+                console.log("Promise Rejected");
             });
         });
 
       });
   });
   describe('/PUT/:id patient', () => {
-      it('it should UPDATE a patient given the id', (done) => {
+      it('it should UPDATE a patient given the id', () => {
         var patient = new Patient({ name: "nombre4 test",
                                     surname: "Apellido4",
                                     ndocument: 29799667,
@@ -134,22 +146,24 @@ describe('Patients', () => {
                         sex: "M",
                         email:"String4@test.com"
                     })
-                .end((err, res) => {
-                    res.should.have.status(200);
-                    res.body.should.be.a('object');
-                    res.body.should.have.property('message').eql('Patient updated!');
-                    res.body.patient.should.have.property('ndocument').eql(29799661);
-                    res.body.patient.should.have.property('nhc').eql(45);
-                  done();
+                .then(function (res) {
+                    expect(res).to.have.status(200);
+                    expect(res.body).to.be.a('object');
+                    expect(res.body).to.have.property('message').eql('Patient updated!');
+                    expect(res.body.patient).to.have.property('ndocument').eql(29799661);
+                    expect(res.body.patient).to.have.property('nhc').eql(45);
+                })
+                .catch(function (err) {
+                    console.log("Promise Rejected");
                 });
           });
       });
   });
- /*
+  /*
   * Test the /DELETE/:id route
   */
   describe('/DELETE/:id patient', () => {
-      it('it should DELETE a patient given the id', (done) => {
+      it('it should DELETE a patient given the id', () => {
         var patient = new Patient({ name: "nombre5 test",
                                     surname: "Apellido5",
                                     ndocument: 29800667,
@@ -161,14 +175,38 @@ describe('Patients', () => {
         patient.save((err, patient) => {
                 chai.request(server)
                 .DELETE('/api/' + process.env.API_VERSION + '/patients/' + patient.id)
-                .end((err, res) => {
-                    res.should.have.status(200);
-                    res.body.should.be.a('object');
-                    res.body.should.have.property('message').eql('Patient successfully DELETEd!');
-                    res.body.result.should.have.property('ok').eql(1);
-                  done();
+                .then(function (res) {
+                    expect(res).to.have.status(200);
+                    expect(res.body).to.be.a('object');
+                    expect(res.body).to.have.property('message').eql('Patient successfully DELETEd!');
+                    expect(res.body.result).to.have.property('ok').eql(1);
+                })
+                .catch(function (err) {
+                    console.log("Promise Rejected");
                 });
           });
       });
   });
+
+  /*describe('when the request has a missing item in payload', function () {
+    it('should return a 400 ok response and a single error', function(done){
+    
+        var login = {
+            email: "andrew.keig@gmail.com",
+            password: ""
+        };
+    
+        request(app)
+        .post('/login')
+        .send(login)
+        .expect(400)
+        .end(function (err, res) {
+            var response = JSON.parse(res.text);
+            response.errors.length.should.equal(1);
+            response.errors[0].messages.length.should.equal(2);
+            done();
+        });
+        });
+    });*/
+
 });
