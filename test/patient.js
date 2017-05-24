@@ -11,6 +11,9 @@ var server      =   require('../server');
 
 var should = chai.should();
 
+//For work whit environment variable.
+require('dotenv').config();
+
 chai.use(chaiHttp);
 describe('Patients', () => {
     beforeEach((done) => {
@@ -21,7 +24,7 @@ describe('Patients', () => {
   describe('/GET patients', () => {
       it('it should GET all the patients', (done) => {
             chai.request(server)
-            .get('/api/v1/patients')
+            .get('/api/' + process.env.API_VERSION + '/patients')
             .end((err, res) => {
                 res.should.have.status(200);
                 res.body.should.be.a('array');
@@ -41,7 +44,7 @@ describe('Patients', () => {
                 email:"String@test.com"
             }
             chai.request(server)
-            .post('/api/v1/patients')
+            .post('/api/' + process.env.API_VERSION + '/patients')
             .send(patient)
             .end((err, res) => {
                 res.should.have.status(200);
@@ -62,7 +65,7 @@ describe('Patients', () => {
                 email:"String2@test.com"
             }
             chai.request(server)
-            .post('/api/v1/patients')
+            .post('/api/' + process.env.API_VERSION + '/patients')
             .send(patient)
             .end((err, res) => {
                 res.should.have.status(200);
@@ -91,7 +94,7 @@ describe('Patients', () => {
                                 });
         patient.save((err, patient) => {
             chai.request(server)
-            .get('/api/v1/patients/' + patient.id)
+            .get('/api/' + process.env.API_VERSION + '/patients/' + patient.id)
             .send(patient)
             .end((err, res) => {
                 res.should.have.status(200);
@@ -122,7 +125,7 @@ describe('Patients', () => {
                                 })
         patient.save((err, patient) => {
                 chai.request(server)
-                .put('/api/v1/patients/' + patient.id)
+                .put('/api/' + process.env.API_VERSION + '/patients/' + patient.id)
                 .send({ name: "nombre4 test",
                         surname: "Apellido4",
                         ndocument: 29799661,
@@ -143,10 +146,10 @@ describe('Patients', () => {
       });
   });
  /*
-  * Test the /DEvarE/:id route
+  * Test the /DELETE/:id route
   */
-  describe('/DEvarE/:id patient', () => {
-      it('it should DEvarE a patient given the id', (done) => {
+  describe('/DELETE/:id patient', () => {
+      it('it should DELETE a patient given the id', (done) => {
         var patient = new Patient({ name: "nombre5 test",
                                     surname: "Apellido5",
                                     ndocument: 29800667,
@@ -157,11 +160,11 @@ describe('Patients', () => {
                                 })
         patient.save((err, patient) => {
                 chai.request(server)
-                .devare('/api/v1/patients/' + patient.id)
+                .DELETE('/api/' + process.env.API_VERSION + '/patients/' + patient.id)
                 .end((err, res) => {
                     res.should.have.status(200);
                     res.body.should.be.a('object');
-                    res.body.should.have.property('message').eql('Patient successfully devared!');
+                    res.body.should.have.property('message').eql('Patient successfully DELETEd!');
                     res.body.result.should.have.property('ok').eql(1);
                   done();
                 });
