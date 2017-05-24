@@ -28,6 +28,7 @@
     "chai-as-promised": "^6.0.0",
     "chai-by-proxy": "^0.1.1",
     "chai-http": "^3.0.0",
+    "express-validator": "^3.2.0",
     "mocha": "^3.4.1",
     "mockgoose": "^7.3.1"
   }

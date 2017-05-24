@@ -22,6 +22,10 @@ exports.findAll = function(req, res) {
 
 //GET - Return all patients in the DB by Filter
 exports.findAllByFilter = function(req, res) {
+	console.log('GET /checkBody' + req.body)
+	
+	req.checkBody("ndocument", "Enter a number document.").notEmpty();
+
 	var promise = Patient.find().exec();
 	promise.then(function(patients) {
 		console.log('GET /patients')

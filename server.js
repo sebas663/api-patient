@@ -4,22 +4,17 @@ var app         =   express();
 var bodyParser  =   require("body-parser");
 var mongoose    =   require('mongoose');
 var morgan      =   require('morgan');
-var validate    =   require('express-validation')
-var vFilter     =   require('./validation/filter.js');
-var Patient     =   require('./models/patient');
-var PatientCtrl =   require('./controllers/patient');
-
+var patientRoute =   require('./routers/patient');
 //For work whit environment variable.
 require('dotenv').config();
 
 const port = process.env.PORT || 3000;
 
 // Middlewares
-app.use(bodyParser.json());                                     
+app.use(bodyParser.json());                                
 app.use(bodyParser.urlencoded({extended: true}));               
 app.use(bodyParser.text());                                    
 app.use(bodyParser.json({ type: 'application/json'})); 
-//app.use(methodOverride());
 app.use(compression());
 
 //don't show the log when it is test
@@ -41,29 +36,12 @@ var db = mongoose.connection;
 //Bind connection to error event (to get notification of connection errors)
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
-
 var router      =   express.Router();
 router.get("/",function(req,res){
     res.json({"message" : "No hay un recurso aqui!!!"});
 });
 app.use('/',router);
-
-// API routes
-var patientRoute = express.Router();
-
-patientRoute.route('/patients')
-  //.get(PatientCtrl.findAll)
-  .get(validate(vFilter.filter),PatientCtrl.findAllByFilter)
-  //.get(PatientCtrl.findAllByFilter)
-  .post(PatientCtrl.add);
-
-patientRoute.route('/patients/:id')
-  .get(PatientCtrl.findById)
-  .put(PatientCtrl.update)
-  .delete(PatientCtrl.delete);
-
 app.use('/api/' + process.env.API_VERSION, patientRoute);
-
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}.`)
