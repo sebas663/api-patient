@@ -20,6 +20,20 @@ exports.findAll = function(req, res) {
 	});
 };
 
+//GET - Return all patients in the DB by Filter
+exports.findAllByFilter = function(req, res) {
+	var promise = Patient.find().exec();
+	promise.then(function(patients) {
+		console.log('GET /patients')
+		return res.status(200).jsonp(patients);
+	})
+	.catch(function(err){
+		// just need one of these
+		console.log('error:', err);
+		return res.send(500, err.message);
+	});
+};
+
 //GET - Return a patient with specified ID
 exports.findById = function(req, res) {
 	var promise = Patient.findById(req.params.id).exec();
