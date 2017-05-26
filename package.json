@@ -18,8 +18,7 @@
     "compression": "^1.6.2",
     "dotenv": "^4.0.0",
     "express": "^4.15.2",
-    "express-validation": "^1.0.2",
-    "joi": "^10.5.0",
+    "express-route-validator": "^0.2.5",
     "mongoose": "^4.10.0",
     "morgan": "^1.8.1"
   },
@@ -28,7 +27,6 @@
     "chai-as-promised": "^6.0.0",
     "chai-by-proxy": "^0.1.1",
     "chai-http": "^3.0.0",
-    "express-validator": "^3.2.0",
     "mocha": "^3.4.1",
     "mockgoose": "^7.3.1"
   }
