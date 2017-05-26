@@ -62,7 +62,6 @@ router.route('/patients')
                   name: req.body.name,
                   surname: req.body.surname,
                   ndocument: req.body.ndocument,
-                  nhc:req.body.nhc,
                   documentTypeCode: req.body.documentTypeCode,
                   sex: req.body.sex,
                   email:req.body.email
@@ -112,7 +111,6 @@ router.route('/patient/:idPatient')
                 patient.name = req.body.name,
                 patient.surname = req.body.surname,
                 patient.ndocument = req.body.ndocument,
-                patient.nhc = req.body.nhc,
                 patient.documentTypeCode = req.body.documentTypeCode,
                 patient.sex = req.body.sex,
                 patient.email = req.body.email
