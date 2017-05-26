@@ -47,10 +47,9 @@ router.route('/patients')
                 name:             { isRequired: true },
                 surname:          { isRequired: true },
                 ndocument:        { isRequired: true },
-                nhc:              { isRequired: true },
                 documentTypeCode: { isRequired: true },
                 sex:              { isRequired: true },
-                email:            { isRequired: true }
+                email:            { isEmail: true, normalizeEmail: true, isRequired: true }
               },
               headers: {
                 'content-type': { isRequired: true, equals: 'application/json' }

@@ -1,19 +1,23 @@
-//Require Mongoose
 var mongoose = require('mongoose');
-
+var autoIncrement = require('mongoose-auto-increment');
 //Define a schema
 var Schema = mongoose.Schema;
 
+var db = mongoose.connection;
+
+autoIncrement.initialize(db);
+
 var PatientSchema = new Schema({
-        id: Number,
         name: String,
         surname: String,
-        ndocument: Number,
-        nhc:Number,
+        ndocument: {type: Number, unique: true },
+        nhc: {type: Number, unique: true },
         documentTypeCode: String,
         sex: String,
         email:String
 });
+
+PatientSchema.plugin(autoIncrement.plugin, { model: 'Patient', field: 'nhc' });
 // the schema is useless so far
 // we need to create a model using it
 var Patient = mongoose.model('Patient', PatientSchema);

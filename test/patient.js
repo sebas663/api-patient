@@ -40,13 +40,10 @@ describe('Patients', () => {
   });
 
   describe('/POST patient', () => {
-      it('it should not POST a patient without dni', () => {
+      it('when missing item in payload, should return a 400 ok response and a single error', () => {
         var patient = {
                 name: "nombre1 test",
-                surname: "Apellido1",
-                nhc:1,
                 documentTypeCode: "DNI",
-                sex: "M",
                 email:"String@test.com"
             }
             chai.request(server)
@@ -56,7 +53,31 @@ describe('Patients', () => {
                 expect(res).to.have.status(200);
                 expect(res.body).to.be.a('object');
                 expect(res.body).to.have.property('errors');
+                expect(res.body.errors).to.have.property('surname');
                 expect(res.body.errors).to.have.property('ndocument');
+                expect(res.body.errors).to.have.property('sex');
+            })
+            .catch(function (err) {
+                console.log("Promise Rejected");
+            })
+      });
+      it('when wrong email added, should return a 400 ok response and a single error', () => {
+        var patient = {
+                name: "nombre2 test",
+                surname: "Apellido2",
+                ndocument: 29799661,
+                documentTypeCode: "DNI",
+                sex: "M",
+                email:"String2est.com"
+            }
+            chai.request(server)
+            .post('/api/' + process.env.API_VERSION + '/patients')
+            .send(patient)
+            .then(function (res) {
+                expect(res).to.have.status(200);
+                expect(res.body).to.be.a('object');
+                expect(res.body).to.have.property('errors');
+                expect(res.body.errors).to.have.property('email');
             })
             .catch(function (err) {
                 console.log("Promise Rejected");
@@ -66,8 +87,7 @@ describe('Patients', () => {
         var patient = {
                 name: "nombre2 test",
                 surname: "Apellido2",
-                ndocument: 29799666,
-                nhc:2,
+                ndocument: 29799662,
                 documentTypeCode: "DNI",
                 sex: "M",
                 email:"String2@test.com"
@@ -96,8 +116,7 @@ describe('Patients', () => {
       it('it should GET a patient by the given id', () => {
         var patient = new Patient({ name: "nombre3 test",
                                     surname: "Apellido3",
-                                    ndocument: 29799664,
-                                    nhc:4,
+                                    ndocument: 29799663,
                                     documentTypeCode: "DNI",
                                     sex: "M",
                                     email:"String3@test.com"
@@ -129,8 +148,7 @@ describe('Patients', () => {
       it('it should UPDATE a patient given the id', () => {
         var patient = new Patient({ name: "nombre4 test",
                                     surname: "Apellido4",
-                                    ndocument: 29799667,
-                                    nhc:4,
+                                    ndocument: 29799664,
                                     documentTypeCode: "DNI",
                                     sex: "M",
                                     email:"String4@test.com"
@@ -138,10 +156,9 @@ describe('Patients', () => {
         patient.save((err, patient) => {
                 chai.request(server)
                 .put('/api/' + process.env.API_VERSION + '/patients/' + patient.id)
-                .send({ name: "nombre4 test",
-                        surname: "Apellido4",
-                        ndocument: 29799661,
-                        nhc:45,
+                .send({ name: "nombre4",
+                        surname: "Apellido",
+                        ndocument: 29799665,
                         documentTypeCode: "DNI",
                         sex: "M",
                         email:"String4@test.com"
@@ -149,9 +166,10 @@ describe('Patients', () => {
                 .then(function (res) {
                     expect(res).to.have.status(200);
                     expect(res.body).to.be.a('object');
-                    expect(res.body).to.have.property('message').eql('Patient updated!');
-                    expect(res.body.patient).to.have.property('ndocument').eql(29799661);
-                    expect(res.body.patient).to.have.property('nhc').eql(45);
+                    expect(res.body).to.have.property('message').eql('Patient successfully updated.');
+                    expect(res.body.patient).to.have.property('name').eql("nombre4");
+                    expect(res.body.patient).to.have.property('surname').eql("Apellido");
+                    expect(res.body.patient).to.have.property('ndocument').eql(29799665);  
                 })
                 .catch(function (err) {
                     console.log("Promise Rejected");
@@ -166,8 +184,7 @@ describe('Patients', () => {
       it('it should DELETE a patient given the id', () => {
         var patient = new Patient({ name: "nombre5 test",
                                     surname: "Apellido5",
-                                    ndocument: 29800667,
-                                    nhc:7,
+                                    ndocument: 29800666,
                                     documentTypeCode: "DNI",
                                     sex: "M",
                                     email:"String5@test.com"
@@ -178,7 +195,7 @@ describe('Patients', () => {
                 .then(function (res) {
                     expect(res).to.have.status(200);
                     expect(res.body).to.be.a('object');
-                    expect(res.body).to.have.property('message').eql('Patient successfully DELETEd!');
+                    expect(res.body).to.have.property('message').eql('Patient successfully deleted.');
                     expect(res.body.result).to.have.property('ok').eql(1);
                 })
                 .catch(function (err) {
@@ -187,26 +204,4 @@ describe('Patients', () => {
           });
       });
   });
-
-  /*describe('when the request has a missing item in payload', function () {
-    it('should return a 400 ok response and a single error', function(done){
-    
-        var login = {
-            email: "andrew.keig@gmail.com",
-            password: ""
-        };
-    
-        request(app)
-        .post('/login')
-        .send(login)
-        .expect(400)
-        .end(function (err, res) {
-            var response = JSON.parse(res.text);
-            response.errors.length.should.equal(1);
-            response.errors[0].messages.length.should.equal(2);
-            done();
-        });
-        });
-    });*/
-
 });
