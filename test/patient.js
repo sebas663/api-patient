@@ -1,13 +1,13 @@
-var mongoose    =   require("mongoose");
+var mongoose     = require("mongoose");
 // set Promise provider to bluebird
 mongoose.Promise = require('bluebird');
-var Patient     =   require('../models/patient');
+var Patient      = require('../models/patient');
 //Require the dev-dependencies
-var chai        =   require('chai');
-var chaiHttp    =   require('chai-http');
+var chai         = require('chai');
+var chaiHttp     = require('chai-http');
 //var chaiAsPromised = require("chai-as-promised");
 //var server      =   require('../server');
-var server      = 'http://localhost:4200';
+var server       = 'http://localhost:4200';
 // Add promise support if this does not exist natively.
 
 //chai.use(chaiAsPromised);
@@ -114,7 +114,8 @@ describe('Patients', () => {
   });
   describe('/GET/:id patient', () => {
       it('it should GET a patient by the given id', () => {
-        var patient = new Patient({ name: "nombre3 test",
+        var patient = new Patient({ 
+                                    name: "nombre3 test",
                                     surname: "Apellido3",
                                     ndocument: 29799663,
                                     documentTypeCode: "DNI",
@@ -146,7 +147,8 @@ describe('Patients', () => {
   });
   describe('/PUT/:id patient', () => {
       it('it should UPDATE a patient given the id', () => {
-        var patient = new Patient({ name: "nombre4 test",
+        var patient = new Patient({ 
+                                    name: "nombre4 test",
                                     surname: "Apellido4",
                                     ndocument: 29799664,
                                     documentTypeCode: "DNI",
@@ -156,7 +158,8 @@ describe('Patients', () => {
         patient.save((err, patient) => {
                 chai.request(server)
                 .put('/api/' + process.env.API_VERSION + '/patients/' + patient.id)
-                .send({ name: "nombre4",
+                .send({ 
+                        name: "nombre4",
                         surname: "Apellido",
                         ndocument: 29799665,
                         documentTypeCode: "DNI",
@@ -182,7 +185,8 @@ describe('Patients', () => {
   */
   describe('/DELETE/:id patient', () => {
       it('it should DELETE a patient given the id', () => {
-        var patient = new Patient({ name: "nombre5 test",
+        var patient = new Patient({
+                                    name: "nombre5 test",
                                     surname: "Apellido5",
                                     ndocument: 29800666,
                                     documentTypeCode: "DNI",

@@ -1,7 +1,7 @@
 {
   "name": "api-patient",
   "version": "1.0.0",
-  "description": "Patient administration.",
+  "description": "Patient CRUD administration.",
   "main": "server.js",
   "scripts": {
     "test": "mocha",
