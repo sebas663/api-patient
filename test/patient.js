@@ -55,7 +55,7 @@ describe('Patients', () => {
                 expect(res.body).to.have.property('errors');
                 expect(res.body.errors).to.have.property('surname');
                 expect(res.body.errors).to.have.property('ndocument');
-                expect(res.body.errors).to.have.property('sex');
+                expect(res.body.errors).to.have.property('sexTypeCode');
             })
             .catch(function (err) {
                 console.log("Promise Rejected");
@@ -67,7 +67,7 @@ describe('Patients', () => {
                 surname: "Apellido2",
                 ndocument: 29799661,
                 documentTypeCode: "DNI",
-                sex: "M",
+                sexTypeCodeTypeCode: "M",
                 email:"String2est.com"
             }
             chai.request(server)
@@ -89,7 +89,7 @@ describe('Patients', () => {
                 surname: "Apellido2",
                 ndocument: 29799662,
                 documentTypeCode: "DNI",
-                sex: "M",
+                sexTypeCode: "M",
                 email:"String2@test.com"
             }
             chai.request(server)
@@ -104,7 +104,7 @@ describe('Patients', () => {
                 expect(res.body.patient).to.have.property('ndocument');
                 expect(res.body.patient).to.have.property('nhc');
                 expect(res.body.patient).to.have.property('documentTypeCode');
-                expect(res.body.patient).to.have.property('sex');
+                expect(res.body.patient).to.have.property('sexTypeCode');
                 expect(res.body.patient).to.have.property('email');
             })
             .catch(function (err) {
@@ -119,7 +119,7 @@ describe('Patients', () => {
                                     surname: "Apellido3",
                                     ndocument: 29799663,
                                     documentTypeCode: "DNI",
-                                    sex: "M",
+                                    sexTypeCode: "M",
                                     email:"String3@test.com"
                                 });
         patient.save((err, patient) => {
@@ -134,7 +134,7 @@ describe('Patients', () => {
                 expect(res.body.patient).to.have.property('ndocument');
                 expect(res.body.patient).to.have.property('nhc');
                 expect(res.body.patient).to.have.property('documentTypeCode');
-                expect(res.body.patient).to.have.property('sex');
+                expect(res.body.patient).to.have.property('sexTypeCode');
                 expect(res.body.patient).to.have.property('email');
                 expect(res.body).to.have.property('_id').eql(patient.id);
             })
@@ -152,7 +152,7 @@ describe('Patients', () => {
                                     surname: "Apellido4",
                                     ndocument: 29799664,
                                     documentTypeCode: "DNI",
-                                    sex: "M",
+                                    sexTypeCode: "M",
                                     email:"String4@test.com"
                                 })
         patient.save((err, patient) => {
@@ -163,7 +163,7 @@ describe('Patients', () => {
                         surname: "Apellido",
                         ndocument: 29799665,
                         documentTypeCode: "DNI",
-                        sex: "M",
+                        sexTypeCode: "M",
                         email:"String4@test.com"
                     })
                 .then(function (res) {
@@ -190,7 +190,7 @@ describe('Patients', () => {
                                     surname: "Apellido5",
                                     ndocument: 29800666,
                                     documentTypeCode: "DNI",
-                                    sex: "M",
+                                    sexTypeCode: "M",
                                     email:"String5@test.com"
                                 })
         patient.save((err, patient) => {

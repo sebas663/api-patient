@@ -13,7 +13,7 @@ var PatientSchema = new Schema({
         ndocument: {type: Number, unique: true },
         nhc: {type: Number, unique: true },
         documentTypeCode: String,
-        sex: String,
+        sexTypeCode: String,
         email:String
 });
 

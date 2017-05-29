@@ -48,7 +48,7 @@ router.route('/patients')
                 surname:          { isRequired: true },
                 ndocument:        { isRequired: true },
                 documentTypeCode: { isRequired: true },
-                sex:              { isRequired: true },
+                sexTypeCode:      { isRequired: true },
                 email:            { isEmail: true, normalizeEmail: true, isRequired: true }
               },
               headers: {
@@ -63,7 +63,7 @@ router.route('/patients')
                   surname: req.body.surname,
                   ndocument: req.body.ndocument,
                   documentTypeCode: req.body.documentTypeCode,
-                  sex: req.body.sex,
+                  sexTypeCode: req.body.sexTypeCode,
                   email:req.body.email
             });
             var promise = patient.save();
@@ -112,7 +112,7 @@ router.route('/patient/:idPatient')
                 patient.surname = req.body.surname,
                 patient.ndocument = req.body.ndocument,
                 patient.documentTypeCode = req.body.documentTypeCode,
-                patient.sex = req.body.sex,
+                patient.sexTypeCode = req.body.sexTypeCode,
                 patient.email = req.body.email
                 return patient.save(); // returns a promise
             }
