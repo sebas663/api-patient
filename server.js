@@ -5,16 +5,19 @@ var bodyParser  =   require("body-parser");
 var mongoose    =   require('mongoose');
 var morgan      =   require('morgan');
 var patientRoute =   require('./routers/patient');
+
+var http = require('http');
+
 //For work whit environment variable.
 require('dotenv').config();
 
 const port = process.env.PORT || 3000;
 
 // Middlewares
-app.use(bodyParser.json());                                
-app.use(bodyParser.urlencoded({extended: true}));               
-app.use(bodyParser.text());                                    
-app.use(bodyParser.json({ type: 'application/json'})); 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.text());
+app.use(bodyParser.json({ type: 'application/json'}));
 app.use(compression());
 
 //don't show the log when it is test
@@ -24,11 +27,11 @@ if(process.env.MONGODBCON !== 'test') {
 }
 
 //db options
-var options = { 
-                server: { socketOptions: { keepAlive: 1, connectTimeoutMS: 30000 } }, 
-                replset: { socketOptions: { keepAlive: 1, connectTimeoutMS : 30000 } } 
+var options = {
+                server: { socketOptions: { keepAlive: 1, connectTimeoutMS: 30000 } },
+                replset: { socketOptions: { keepAlive: 1, connectTimeoutMS : 30000 } }
               };
-//db connection 
+//db connection
 var mongoDB = process.env.MONGODBCON;
 mongoose.connect(mongoDB,options);
 //Get the default connection
@@ -36,20 +39,14 @@ var db = mongoose.connection;
 //Bind connection to error event (to get notification of connection errors)
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
-var router      =   express.Router();
-router.get("/",function(req,res){
-    res.json({"message" : "No hay un recurso aqui!!!"});
-});
-app.use('/',router);
-app.use('/api/' + process.env.API_VERSION, patientRoute);
-// Add headers
+// Add headers always before adding the routes!!!!
 app.use(function (req, res, next) {
 
     // Website you wish to allow to connect
     res.setHeader('Access-Control-Allow-Origin', '*');
 
     // Request methods you wish to allow
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
 
     // Request headers you wish to allow
     res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
@@ -61,7 +58,14 @@ app.use(function (req, res, next) {
     // Pass to next layer of middleware
     next();
 });
+var router      =   express.Router();
+router.get("/",function(req,res){
+    res.json({"message" : "No hay un recurso aqui!!!"});
+});
+app.use('/',router);
+app.use('/api/' + process.env.API_VERSION, patientRoute);
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}.`)
 })
+
